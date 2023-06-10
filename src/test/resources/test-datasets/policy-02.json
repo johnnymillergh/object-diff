@@ -1,0 +1,21 @@
+{
+  "policyNo": "P2b0d76bd8903",
+  "policyName": "Health Insurance",
+  "issuedAt": "2023-06-03T18:30:44",
+  "premium": 21.93,
+  "policyHolder": {
+    "fullName": "Benjamin Anderson",
+    "dob": "1976-03-19",
+    "gender": "MALE",
+    "nationality": "US",
+    "idType": 4,
+    "idNumber": "MLT-565335c32690",
+    "email": {
+      "email": "benjamin.anderson@gmail.com"
+    },
+    "mobilePhone": {
+      "countryCode": "+1",
+      "phoneNumber": "100-187-5234"
+    }
+  }
+}
