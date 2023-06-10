@@ -47,5 +47,5 @@ jmh {
     includeTests = true
     timeOnIteration = '1s'
     warmup = '1s'
-    verbosity = 'NORMAL'
+    verbosity = 'SILENT'
 }

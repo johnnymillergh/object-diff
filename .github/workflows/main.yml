@@ -45,6 +45,8 @@ jobs:
         run: ./gradlew build
       - name: Benchmark with JMH
         run: ./gradlew jmh
+      - name: Display JMH Benchmark Result
+        run: cat ./build/results/jmh/results.txt
       - name: Display Built Artifacts
         run: |
           dir
