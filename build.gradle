@@ -37,6 +37,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+// https://github.com/melix/jmh-gradle-plugin#configuration-options
 jmh {
     warmupIterations = 2
     iterations = 5
@@ -44,4 +45,7 @@ jmh {
     fork = 1
     threads = 2
     includeTests = true
+    timeOnIteration = '1s'
+    warmup = '1s'
+    verbosity = 'NORMAL'
 }
