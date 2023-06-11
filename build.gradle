@@ -35,13 +35,24 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    // https://mkyong.com/gradle/gradle-display-test-results-in-console/
+    testLogging {
+        events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
+    }
+    // https://junit.org/junit5/docs/current/user-guide/index.html#writing-tests-parallel-execution
+    // https://www.jvt.me/posts/2021/03/11/gradle-speed-parallel/
+    systemProperties([
+            // Configuration parameters to execute all tests in parallel
+            'junit.jupiter.execution.parallel.enabled'     : 'true',
+            'junit.jupiter.execution.parallel.mode.default': 'concurrent',
+    ])
 }
 
 // https://github.com/melix/jmh-gradle-plugin#configuration-options
 jmh {
     warmupIterations = 2
     iterations = 5
-    benchmarkMode = ['thrpt','ss']
+    benchmarkMode = ['thrpt', 'ss']
     fork = 1
     threads = 2
     includeTests = true
