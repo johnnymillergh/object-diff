@@ -23,7 +23,7 @@ public class ObjectDiffHelperBenchmark {
     public void diffObjects_whenOnlyOneFieldIsDifferent_thenOnlyOneFieldInDiffedObjectIsNonNull() {
         val policyChangeApplication = parse("/test-datasets/policy-change-application-01.json",
                 PolicyChangeApplication.class);
-        val policy = parse("/benchmark-datasets/policy-01.json", Policy.class);
+        val policy = parse("/test-datasets/policy-01.json", Policy.class);
         diffObjects(policy, policyChangeApplication);
     }
 
@@ -31,7 +31,7 @@ public class ObjectDiffHelperBenchmark {
     public void diffObjects_whenAllFieldsAreTheSame_thenAllFieldsInDiffedShouldBeNull() {
         val policyChangeApplication = parse("/test-datasets/policy-change-application-02.json",
                 PolicyChangeApplication.class);
-        val policy = parse("/benchmark-datasets/policy-02.json", Policy.class);
+        val policy = parse("/test-datasets/policy-02.json", Policy.class);
         diffObjects(policy, policyChangeApplication);
     }
 
@@ -39,7 +39,7 @@ public class ObjectDiffHelperBenchmark {
     public void diffObjects_whenIdTypeIsNotTheSame_thenIdTypeShouldBeReturned() {
         val policyChangeApplication = parse("/test-datasets/policy-change-application-03.json",
                 PolicyChangeApplication.class);
-        val policy = parse("/benchmark-datasets/policy-03.json", Policy.class);
+        val policy = parse("/test-datasets/policy-03.json", Policy.class);
         diffObjects(policy, policyChangeApplication);
     }
 }
