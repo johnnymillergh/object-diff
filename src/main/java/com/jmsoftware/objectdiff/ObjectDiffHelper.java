@@ -29,25 +29,29 @@ import static java.util.Objects.nonNull;
  **/
 @Slf4j
 public class ObjectDiffHelper {
+    private ObjectDiffHelper() {
+    }
+
     /**
-     * Diff 2 objects. the {@link TARGET} object has to be annotated with {@link ClassMapping} and {@link FieldMapping}
+     * Diff 2 objects. the {@link T} object has to be annotated with {@link ClassMapping} and {@link FieldMapping}
      *
-     * @param <SOURCE>     the type parameter for the Source object
-     * @param <TARGET>     the type parameter for the Target object
+     * @param <S>          the type parameter for the Source object
+     * @param <T>          the type parameter for the Target object
      * @param sourceObject the source object
      * @param targetObject the target object
      * @return a new instance of target's type
      */
     @SneakyThrows
-    public static <SOURCE, TARGET> TARGET diffObjects(SOURCE sourceObject, TARGET targetObject) {
+    public static <S, T> T diffObjects(S sourceObject, T targetObject) {
         if (ObjectUtils.anyNull(sourceObject, targetObject)) {
             return targetObject;
         }
         val targetFields = FieldUtils.getAllFields(targetObject.getClass());
-        @SuppressWarnings("unchecked") val newTargetInstance = (TARGET) targetObject.getClass().newInstance();
+        @SuppressWarnings("unchecked") val newTargetInstance = (T) targetObject.getClass()
+                .getConstructor().newInstance();
         log.warn("Created a new target instance: {}@{}", newTargetInstance.getClass().getName(),
                 toHexString(newTargetInstance.hashCode()));
-        // FIXME: currently we don't support primitive array, Map
+        // * INFO: currently we don't support primitive arrays, Map
         if (targetObject instanceof Collection) {
             compareAndWriteTargetCollection(sourceObject, targetObject, newTargetInstance);
             return newTargetInstance;
@@ -58,11 +62,11 @@ public class ObjectDiffHelper {
 
     @SneakyThrows
     @SuppressWarnings("ConstantValue")
-    private static <SOURCE, TARGET> void compareAndWrite(
-            SOURCE sourceObject,
-            TARGET targetObject,
+    private static <S, T> void compareAndWrite(
+            S sourceObject,
+            T targetObject,
             Field[] targetFields,
-            TARGET newTargetInstance
+            T newTargetInstance
     ) {
         for (val targetField : targetFields) {
             val targetFieldValue = FieldUtils.readField(targetField, targetObject, true);
@@ -95,9 +99,9 @@ public class ObjectDiffHelper {
         }
     }
 
-    private static <TARGET> void handleMissingAnnotation(
+    private static <T> void handleMissingAnnotation(
             Field targetField,
-            TARGET newTargetInstance,
+            T newTargetInstance,
             Object targetFieldValue
     ) {
         log.info("Writing the original target value, because the target field <{}> {} was not annotated " +
@@ -111,11 +115,11 @@ public class ObjectDiffHelper {
     }
 
     @SneakyThrows
-    private static <TARGET> void compareNonNestedFields(
+    private static <T> void compareNonNestedFields(
             Field targetField,
             Object sourceFieldValue,
             Object targetFieldValue,
-            TARGET newTargetInstance,
+            T newTargetInstance,
             FieldMapping mapping
     ) {
         log.info("The source field is not nested without unwrapping. sourceFieldName: {}", mapping.source());
@@ -134,11 +138,11 @@ public class ObjectDiffHelper {
     }
 
     @SneakyThrows
-    private static <TARGET> void compareNonNestedFieldsWithUnwrapping(
+    private static <T> void compareNonNestedFieldsWithUnwrapping(
             Field targetField,
             Object sourceFieldValue,
             Object targetFieldValue,
-            TARGET newTargetInstance,
+            T newTargetInstance,
             FieldMapping mapping
     ) {
         log.info("The source field is not nested and needs unwrapping. sourceFieldName: {}", mapping.source());
@@ -159,11 +163,11 @@ public class ObjectDiffHelper {
     }
 
     @SneakyThrows
-    private static <SOURCE, TARGET> void compareNestedFields(
+    private static <S, T> void compareNestedFields(
             Field targetField,
-            SOURCE sourceObject,
-            TARGET targetObject,
-            TARGET newTargetInstance,
+            S sourceObject,
+            T targetObject,
+            T newTargetInstance,
             FieldMapping mapping
     ) {
         log.warn("The source field is nested. Going to compare with the source field: <{}> {}.{}",
@@ -179,10 +183,10 @@ public class ObjectDiffHelper {
         return Objects.equals(value1, value2);
     }
 
-    private static <SOURCE, TARGET> void compareAndWriteTargetCollection(
-            SOURCE sourceObject,
-            TARGET targetObject,
-            TARGET newTargetInstance
+    private static <S, T> void compareAndWriteTargetCollection(
+            S sourceObject,
+            T targetObject,
+            T newTargetInstance
     ) {
         log.warn("Comparing Collection instances, sourceObject: {}, targetObject: {}", sourceObject, targetObject);
         ((Collection<?>) targetObject).forEach(item -> {
